@@ -19,7 +19,7 @@ def get_unique_slug(instance, new_slug=None, size=10, max_size=30):
         Recursive
         """
         slug = new_slug
-    slug = slug[:max_size]
+    #slug = slug[:max_size] => not working if the slug is too long
     Klass = instance.__class__ # Playlist, Category
     parent = None
     try:

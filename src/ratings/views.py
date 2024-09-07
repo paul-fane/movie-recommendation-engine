@@ -2,9 +2,10 @@ from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.http import require_http_methods
 
-#from ml import tasks as ml_tasks
+from ml import tasks as ml_tasks
 
 from .models import Rating
+from playlists.models import MovieProxy
 
 @require_http_methods(['POST'])
 def rate_movie_view(request):
@@ -20,7 +21,8 @@ def rate_movie_view(request):
     message = "You must <a href='/accounts/login'>login</a> to rate this."
     if user.is_authenticated:
         message = "<span class='bg-danger text-light py-1 px-3 rounded'>An error occured.</div>"
-        ctype = ContentType.objects.get(app_label='playlists', model='playlist')
+        ctype = ContentType.objects.get_for_model(MovieProxy, for_concrete_model=False)
+        #ctype = ContentType.objects.get(app_label='playlists', model='MovieProxy')
         rating_obj = Rating.objects.create(content_type=ctype, object_id=object_id, value=rating_value, user=user)
         if rating_obj.content_object is not None:
             total_new_suggestions = request.session.get("total-new-suggestions") or 0

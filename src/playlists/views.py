@@ -114,8 +114,9 @@ class MovieListView(ListView):
                 return qs.popular()
             elif sort == 'unpopular':
                 return qs.popular(reverse=True)
+            #print(sort)
             qs = qs.order_by(sort)
-        print(qs.first())
+        #print(qs.first())
         return qs
 
     def get_template_names(self):

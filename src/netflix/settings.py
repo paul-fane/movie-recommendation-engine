@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'suggestions',
     'profiles',
     'exports',
+    'dashboard',
 ]
 
 SITE_ID = 1

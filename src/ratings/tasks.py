@@ -21,7 +21,7 @@ def generate_fake_reviews(count=100, users=10, null_avg=False):
     random_user_ids = random.sample(range(user_s.id, user_e.id), users)
     users = User.objects.filter(id__in=random_user_ids)
     movies = MovieProxy.objects.all().order_by("?")[:count]
-    # movie_ctype = ContentType.objects.get_for_model(MovieProxy)
+    # movie_ctype = ContentType.objects.get_for_model(MovieProxy, for_concrete_model=False)
     if null_avg:
         movies = MovieProxy.objects.filter(rating_avg__isnull=True).order_by("?")[:count]
     n_ratings = movies.count()
@@ -45,17 +45,26 @@ def generate_fake_reviews(count=100, users=10, null_avg=False):
 @shared_task(name='task_update_movie_ratings')
 def task_update_movie_ratings(object_id=None):
     start_time = time.time()
-    ctype = ContentType.objects.get_for_model(MovieProxy)
+    
+    # for_concrete_model=False allows fetching the ContentType of a proxy model
+    ctype = ContentType.objects.get_for_model(MovieProxy, for_concrete_model=False)
     rating_qs = Rating.objects.filter(content_type=ctype)
+    
     if object_id is not None:
         rating_qs = rating_qs.filter(object_id=object_id)
+        
+    # Groups records by object_id
+    # For each group (each distinct object_id), it calculates the average of the value field.
+    # It also counts how many times each object_id appears in the queryset.
     agg_ratings = rating_qs.values('object_id').annotate(average=Avg('value'), count=Count('object_id'))
+    
     for agg_rate in agg_ratings:
         object_id = agg_rate['object_id']
         rating_avg = agg_rate['average']
         rating_count = agg_rate['count']
         score = decimal.Decimal(rating_avg * rating_count * 1.0)
         qs = MovieProxy.objects.filter(id=object_id)
+        #qs = Playlist.objects.filter(id=object_id)
         qs.update(
             rating_avg=rating_avg,
             rating_count=rating_count,

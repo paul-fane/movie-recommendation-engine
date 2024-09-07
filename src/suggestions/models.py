@@ -8,6 +8,7 @@ from django.db.models import F
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
+from playlists.models import MovieProxy
 
 User = settings.AUTH_USER_MODEL # 'auth.User'
 
@@ -16,7 +17,8 @@ class SuggestionManager(models.Manager):
         data = {}
         delta = datetime.timedelta(days=days_ago)
         time_delta = timezone.now() - delta
-        ctype = ContentType.objects.get(app_label='playlist', model='Playlist')
+        #ctype = ContentType.objects.get(app_label='playlist', model='Playlist')
+        ctype = ContentType.objects.get_for_model(MovieProxy, for_concrete_model=False)
         filter_args = {
             "content_type": ctype,
             "object_id__in": movie_ids,

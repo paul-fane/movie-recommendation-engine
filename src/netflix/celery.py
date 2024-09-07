@@ -22,7 +22,7 @@ app.conf.beat_schedule = {
         'schedule': 60 * 30, # 30 min,
     },
     "daily_movie_idx_refresh": {
-        "task": "movies.tasks.update_movie_position_embedding_idx",
+        "task": "playlists.tasks.update_movie_position_embedding_idx",
         "schedule": crontab(hour=1, minute=0)
     },
     "daily_rating_dataset_export": {
