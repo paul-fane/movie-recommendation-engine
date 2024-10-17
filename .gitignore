@@ -2,15 +2,15 @@ src\data\movies_metadata.csv
 src\local-cdn
 src\data\ratings_small.csv
 src\data\links_small.csv
-
-
+src\nbs\
+src/nbs/
 
 # Django #
 *.log
 *.pot
 *.pyc
 __pycache__
-db.sqlite3
+#db.sqlite3
 media
 
 # Backup files # 
