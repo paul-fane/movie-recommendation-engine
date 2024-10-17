@@ -64,7 +64,7 @@ SITE_ID = 1
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD='username'
-ACCOUNT_EMAIL_VERIFICATION = None
+#ACCOUNT_EMAIL_VERIFICATION = None
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,7 +81,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'netflix.urls'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-CELERY_BROKER_URL = 'redis://localhost:6379'
+#CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+#CELERY_BROKER_URL = 'redis://localhost:6380'
 CELERY_RESULT_BACKEND = 'django-db'
 
 TEMPLATES = [

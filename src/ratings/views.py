@@ -33,11 +33,12 @@ def rate_movie_view(request):
             if items_rated % 5 == 0:
                 print("trigger new suggestions")
                 users_ids = [user.id]
-                # ml_tasks.batch_users_prediction_task.apply_async(kwargs ={
-                #     "users_ids": users_ids,
-                #     "start_page": total_new_suggestions,
-                #     "max_pages": 10
-                # })
+                # apply_async() function in Celery is used to schedule the execution of a task asynchronously
+                ml_tasks.batch_users_prediction_task.apply_async(kwargs ={
+                    "users_ids": users_ids,
+                    "start_page": total_new_suggestions,
+                    "max_pages": 10
+                }) # kwargs: A dictionary of keyword arguments to pass to the task.
             message = "<span class='bg-success text-light py-1 px-3 rounded'>Rating saved!</div>"
             response = HttpResponse(message, status=200)
             response['HX-Trigger-After-Settle'] = 'did-rate-movie'

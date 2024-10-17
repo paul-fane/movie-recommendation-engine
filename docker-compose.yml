@@ -1,0 +1,52 @@
+# version: '3'
+
+# services:
+#     redis:
+#         image: redis
+#         restart: always
+#         expose: 
+#           - 6380
+#         ports:
+#           - 6380:6379 # redis://localhost:6380
+#         volumes:
+#           - redis_data:/data
+#         entrypoint: redis-server --appendonly yes
+
+# volumes: 
+#     redis_data:
+
+# docker-compose.yml
+version: '3'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - celery
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - 6379:6379
+
+  celery:
+    build: .
+    command: celery -A netflix worker --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - ./src:/app
+
+  celery-beat:
+    build: .
+    command: celery -A netflix beat --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - ./src:/app

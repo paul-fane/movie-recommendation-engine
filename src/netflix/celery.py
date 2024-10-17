@@ -23,8 +23,9 @@ app.conf.beat_schedule = {
     },
     "daily_movie_idx_refresh": {
         "task": "playlists.tasks.update_movie_position_embedding_idx",
-        "schedule": crontab(hour=1, minute=0)
+        "schedule":  crontab(hour=1, minute=0)
     },
+    # To solve error !!!! export rating dataset!!!
     "daily_rating_dataset_export": {
         "task": "export_rating_dataset",
         "schedule": crontab(hour=1, minute=30)
